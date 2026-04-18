@@ -38,14 +38,19 @@ class Browser:
                 options.add_argument("-profile")
                 options.add_argument(profile)
             else:
-                options.proxy = Proxy({'proxyType': ProxyType.MANUAL, 'httpProxy': 'localhost:8080'})
+                options.set_preference("network.proxy.http", "127.0.0.1")
+                options.set_preference("network.proxy.http_port", 8080)
+                options.set_preference("network.proxy.share_proxy_settings", True)
+                options.set_preference("network.proxy.ssl", "127.0.0.1")
+                options.set_preference("network.proxy.ssl_port", 8080)
+                options.set_preference("network.proxy.type", 1)
             self.driver = FirefoxDriver(options=options)
         elif (nav == "edge"):
             options = EdgeOptions()
             if (profile):
                 options.add_argument(f"--user-data-dir={profile}")
             else:
-                options.proxy = Proxy({'proxyType': ProxyType.MANUAL, 'httpProxy': 'localhost:8080'})
+                options.add_argument('--proxy-server=http://localhost:8080')
             self.driver = EdgeDriver(options=options)
         elif (nav == "safari"):
             options = SafariOptions()
@@ -57,7 +62,7 @@ class Browser:
             if (profile):
                 options.add_argument(f"--user-data-dir={profile}")
             else:
-                options.proxy = Proxy({'proxyType': ProxyType.MANUAL, 'httpProxy': 'localhost:8080'})
+                options.add_argument('--proxy-server=http://localhost:8080')
             self.driver = ChromeDriver(options=options)
 
     def get(self, site):
