@@ -32,14 +32,13 @@ class Browser:
         self.storage = BancoDeDados(nav, nivel)
         if (nav == "firefox"):
             options = FirefoxOptions()
-            options.add_argument("-profile")
             if (profile):
+                options.add_argument("-profile")
                 options.add_argument(profile)
             self.driver = FirefoxDriver(options=options)
         elif (nav == "edge"):
             options = EdgeOptions()
             if (profile):
-                options.add_argument(profile)
                 options.add_argument(f"--user-data-dir={profile}")
             self.driver = EdgeDriver(options=options)
         elif (nav == "safari"):
@@ -50,7 +49,6 @@ class Browser:
             if (path):
                 options.binary_location = path
             if (profile):
-                options.add_argument(profile)
                 options.add_argument(f"--user-data-dir={profile}")
             self.driver = ChromeDriver(options=options)
 
