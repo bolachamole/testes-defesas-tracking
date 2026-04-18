@@ -16,6 +16,8 @@ Testes devem ser iniciados por meio do comando:
 python3 main.py --navegador=<nome do navegador> --nivel=<nível das configurações sendo testadas> --path-pefil=<caminho do perfil guardando as configurações do navegador a serem utilizadas> --path-navegador=<caminho do executável do navegador>
 ```
 
+A opção ```path-perfil``` é recomendada, mas não obrigatória. Não é necessária ao testar o Safari.
+
 A opção ```path-navegador``` é obrigatória ao testar os navegadores Opera e Brave, devido ao uso do WebDriver do Chrome.
 
 Os seguintes valores são válidos para a opção ```navegador```: ```chrome```, ```firefox```, ```edge```, ```opera```, ```brave``` e ```safari```.

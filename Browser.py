@@ -28,16 +28,19 @@ return resultado;
 """
 
 class Browser:
-    def __init__(self, nav, nivel, profile, path=None):
+    def __init__(self, nav, nivel, profile=None, path=None):
         self.storage = BancoDeDados(nav, nivel)
         if (nav == "firefox"):
             options = FirefoxOptions()
             options.add_argument("-profile")
-            options.add_argument(profile)
+            if (profile):
+                options.add_argument(profile)
             self.driver = FirefoxDriver(options=options)
         elif (nav == "edge"):
             options = EdgeOptions()
-            options.add_argument(f"--user-data-dir={profile}")
+            if (profile):
+                options.add_argument(profile)
+                options.add_argument(f"--user-data-dir={profile}")
             self.driver = EdgeDriver(options=options)
         elif (nav == "safari"):
             options = SafariOptions()
@@ -46,7 +49,9 @@ class Browser:
             options = ChromeOptions()
             if (path):
                 options.binary_location = path
-            options.add_argument(f"--user-data-dir={profile}")
+            if (profile):
+                options.add_argument(profile)
+                options.add_argument(f"--user-data-dir={profile}")
             self.driver = ChromeDriver(options=options)
 
     def get(self, site):

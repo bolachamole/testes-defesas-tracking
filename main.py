@@ -10,7 +10,7 @@ def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--navegador")
     parser.add_argument("--nivel", default="normal")
-    parser.add_argument("--path-perfil")
+    parser.add_argument("--path-perfil", default=None)
     parser.add_argument("--path-navegador", default=None)
     return parser.parse_args()
 
