@@ -66,7 +66,10 @@ class Browser:
             self.driver = ChromeDriver(options=options)
 
     def get(self, site):
-        self.driver.get(site)
+        try:
+            self.driver.get(site)
+        except:
+            self.driver.get(site)
 
     def coleta(self, site):
         resultado = self.driver.execute_script(MEU_SCRIPT)
@@ -86,4 +89,7 @@ class Browser:
                     self.storage.desconecta(conexao)
 
     def quit(self):
-        self.driver.quit()
+        try:
+            self.driver.quit()
+        except:
+            self.driver.quit()
