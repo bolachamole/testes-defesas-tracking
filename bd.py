@@ -46,6 +46,28 @@ class BancoDeDados:
         except Exception as erro:
             print("Não foi possível inserir na tabela.", erro)
 
+    def conta_cookies_1p(self, conexao):
+        quant = -1
+        try:
+            cursor = conexao.cursor()
+            consulta = cursor.execute(f"SELECT * FROM {self.nome_db}_cookies WHERE third_party=0;")
+            quant = len(consulta.fetchall())
+            cursor.close()
+        except Exception as erro:
+            print("Não foi possível procurar cookies de primeiros.", erro)
+        return quant
+
+    def conta_cookies_3p(self, conexao):
+        quant = -1
+        try:
+            cursor = conexao.cursor()
+            consulta = cursor.execute(f"SELECT * FROM {self.nome_db}_cookies WHERE third_party=1;")
+            quant = len(consulta.fetchall())
+            cursor.close()
+        except Exception as erro:
+            print("Não foi possível procurar cookies de terceiros.", erro)
+        return quant
+
     def cria_tabela_storage(self, conexao):
         try:
             cursor = conexao.cursor()

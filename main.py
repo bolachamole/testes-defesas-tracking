@@ -46,17 +46,21 @@ def main():
                     browser.get(f"https://{site}")
                     sleep(60)
                     browser.coleta(site)
-                bancodedados = BancoDeDados(args.navegador, args.nivel)
-                conexao = bancodedados.conecta()
-                if (conexao):
-                    supercookies = bancodedados.conta_supercookies(conexao)
-                    print(f"N° de supercookies:", supercookies)
         except Exception as erro:
             print("Erro ao tentar abrir os sites:", erro)
         finally:
             browser.quit()
             proc.terminate()
             proc.wait()
+            bancodedados = BancoDeDados(args.navegador, args.nivel)
+            conexao = bancodedados.conecta()
+            if (conexao):
+                n = bancodedados.conta_cookies_1p(conexao)
+                print("N° de possíveis cookies de rastreamento (primeiros):", n)
+                n = bancodedados.conta_cookies_3p(conexao)
+                print("N° de possíveis cookies de rastreamento (terceiros):", n)
+                n = bancodedados.conta_supercookies(conexao)
+                print(f"N° de supercookies:", n)
     except Exception as erro:
         print("Erro ao tentar iniciar os testes:", erro)
 

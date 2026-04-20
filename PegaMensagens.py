@@ -192,7 +192,6 @@ class PegaMensagens:
             ctx.log.info(f"Tracker {flow.request.url} encontrado.")
 
     def done(self):
-        print("N° de cookies de rastreamento:", len(self.id_cookies))
         print("N° de instâncias de cookie syncing:", self.sync_cookies)
         print("N° de requisições a domínios e scripts de rastreamento:", self.trackers)
         blocks = self.trackers - self.no_block
