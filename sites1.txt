@@ -1,7 +1,3 @@
-amazon.com
-temu.com
-ebay.com
-aliexpress.com
 ozon.ru
 amazon.in
 amazon.co.jp

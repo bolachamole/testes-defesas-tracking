@@ -6,108 +6,106 @@ class BancoDeDados:
     def __init__(self, navegador, nivel):
         self.nome_db = f"{navegador}_{nivel}"
 
-    def conecta(self):
-        conexao = None
+    def cria_tabela_cookie(self):
         try:
-            conexao = sqlite3.connect(DB_ARQ)
-            return conexao
+            with sqlite3.connect(DB_ARQ) as conexao:
+                cursor = conexao.cursor()
+                cursor.execute(f"""CREATE TABLE IF NOT EXISTS {self.nome_db}_cookies(
+                            id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            domain TEXT,
+                            name TEXT,
+                            value TEXT,
+                            third_party INTEGER,
+                            expires TEXT
+                            );""")
+                conexao.commit()
+                cursor.close()
+            conexao.close()
         except Exception as erro:
-            print("Não foi possível conectar-se.", erro)    
-        return None
+            print("Não foi possível criar tabela {self.nome_db}_cookies.", erro)
 
-    def cria_tabela_cookie(self, conexao):
-        try:
-            cursor = conexao.cursor()
-            cursor.execute(f"""CREATE TABLE IF NOT EXISTS {self.nome_db}_cookies(
-                        id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        domain TEXT,
-                        name TEXT,
-                        value TEXT,
-                        third_party INTEGER,
-                        expires TEXT
-                        );""")
-            conexao.commit()
-            cursor.close()
-        except Exception as erro:
-            print("Não foi possível criar tabela.", erro)
-
-    def insere_cookie(self, conexao, domain, name, value, tp, expires):
+    def insere_cookie(self, domain, name, value, tp, expires):
         if (tp):
             third_party = 1
         else:
             third_party = 0
 
         try:
-            cursor = conexao.cursor()
-            tupla = (domain, name, value, third_party, expires)
-            cursor.execute(f"INSERT INTO {self.nome_db}_cookies (domain, name, value, third_party, expires) VALUES (?, ?, ?, ?, ?);", tupla)
-            conexao.commit()
-            cursor.close()
+            with sqlite3.connect(DB_ARQ) as conexao:
+                cursor = conexao.cursor()
+                tupla = (domain, name, value, third_party, expires)
+                cursor.execute(f"INSERT INTO {self.nome_db}_cookies (domain, name, value, third_party, expires) VALUES (?, ?, ?, ?, ?);", tupla)
+                conexao.commit()
+                cursor.close()
+            conexao.close
         except Exception as erro:
-            print("Não foi possível inserir na tabela.", erro)
+            print("Não foi possível inserir na tabela {self.nome_db}_cookies.", erro)
 
-    def conta_cookies_1p(self, conexao):
+    def conta_cookies_1p(self):
         quant = -1
         try:
-            cursor = conexao.cursor()
-            consulta = cursor.execute(f"SELECT * FROM {self.nome_db}_cookies WHERE third_party=0;")
-            quant = len(consulta.fetchall())
-            cursor.close()
+            with sqlite3.connect(DB_ARQ) as conexao:
+                cursor = conexao.cursor()
+                consulta = cursor.execute(f"SELECT * FROM {self.nome_db}_cookies WHERE third_party=0;")
+                quant = len(consulta.fetchall())
+                cursor.close()
+            conexao.close()
         except Exception as erro:
             print("Não foi possível procurar cookies de primeiros.", erro)
         return quant
 
-    def conta_cookies_3p(self, conexao):
+    def conta_cookies_3p(self):
         quant = -1
         try:
-            cursor = conexao.cursor()
-            consulta = cursor.execute(f"SELECT * FROM {self.nome_db}_cookies WHERE third_party=1;")
-            quant = len(consulta.fetchall())
-            cursor.close()
+            with sqlite3.connect(DB_ARQ) as conexao:
+                cursor = conexao.cursor()
+                consulta = cursor.execute(f"SELECT * FROM {self.nome_db}_cookies WHERE third_party=1;")
+                quant = len(consulta.fetchall())
+                cursor.close()
+            conexao.close()
         except Exception as erro:
             print("Não foi possível procurar cookies de terceiros.", erro)
         return quant
 
-    def cria_tabela_storage(self, conexao):
+    def cria_tabela_storage(self):
         try:
-            cursor = conexao.cursor()
-            cursor.execute(f"""CREATE TABLE IF NOT EXISTS {self.nome_db}_storage(
-                        id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        domain TEXT,
-                        name TEXT,
-                        value TEXT
-                        );""")
-            conexao.commit()
-            cursor.close()
+            with sqlite3.connect(DB_ARQ) as conexao:
+                cursor = conexao.cursor()
+                cursor.execute(f"""CREATE TABLE IF NOT EXISTS {self.nome_db}_storage(
+                            id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            domain TEXT,
+                            name TEXT,
+                            value TEXT
+                            );""")
+                conexao.commit()
+                cursor.close()
+            conexao.close()
             return 0
         except Exception as erro:
-            print("Não foi possível criar tabela.", erro)
+            print("Não foi possível criar tabela {self.nome_db}_storage.", erro)
         return 1
 
-    def insere_storage(self, conexao, domain, name, value):
+    def insere_storage(self, domain, name, value):
         try:
-            cursor = conexao.cursor()
-            tupla = (domain, name, value)
-            cursor.execute(f"INSERT INTO {self.nome_db}_storage (domain, name, value) VALUES (?, ?, ?);", tupla)
-            conexao.commit()
-            cursor.close()
+            with sqlite3.connect(DB_ARQ) as conexao:
+                cursor = conexao.cursor()
+                tupla = (domain, name, value)
+                cursor.execute(f"INSERT INTO {self.nome_db}_storage (domain, name, value) VALUES (?, ?, ?);", tupla)
+                conexao.commit()
+                cursor.close()
+            conexao.close()
         except Exception as erro:
-            print("Não foi possível inserir na tabela.", erro)
+            print("Não foi possível inserir na tabela {self.nome_db}_storage.", erro)
 
-    def conta_supercookies(self, conexao):
+    def conta_supercookies(self):
         quant = -1
         try:
-            cursor = conexao.cursor()
-            consulta = cursor.execute(f"SELECT * FROM {self.nome_db}_cookies INNER JOIN {self.nome_db}_storage ON {self.nome_db}_cookies.domain={self.nome_db}_storage.domain AND {self.nome_db}_cookies.name={self.nome_db}_storage.name AND {self.nome_db}_cookies.value={self.nome_db}_storage.value;")
-            quant = len(consulta.fetchall())
-            cursor.close()
+            with sqlite3.connect(DB_ARQ) as conexao:
+                cursor = conexao.cursor()
+                consulta = cursor.execute(f"SELECT * FROM {self.nome_db}_cookies INNER JOIN {self.nome_db}_storage ON {self.nome_db}_cookies.domain={self.nome_db}_storage.domain AND {self.nome_db}_cookies.name={self.nome_db}_storage.name AND {self.nome_db}_cookies.value={self.nome_db}_storage.value;")
+                quant = len(consulta.fetchall())
+                cursor.close()
+            conexao.close()
         except Exception as erro:
             print("Não foi possível procurar supercookies.", erro)
         return quant
-
-    def desconecta(self, conexao):
-        try:
-            conexao.close()
-            print("Conexão encerrada.")
-        except Exception as erro:
-            print("Não foi possível encerrar a conexão.", erro)

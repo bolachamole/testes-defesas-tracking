@@ -74,19 +74,16 @@ class Browser:
     def coleta(self, site):
         resultado = self.driver.execute_script(MEU_SCRIPT)
         if (resultado):
-            conexao = self.storage.conecta()
-            if (conexao):
-                status = self.storage.cria_tabela_storage(conexao)
-                if (status == 0):
-                    if ("localStorage" in resultado.keys()):
-                        local_dicio = resultado["localStorage"]
-                        for item in local_dicio.items():
-                            self.storage.insere_storage(conexao, site, item[0], item[1])
-                    if ("sessionStorage" in resultado.keys()):
-                        session_dicio = resultado["sessionStorage"]
-                        for item in session_dicio.items():
-                            self.storage.insere_storage(conexao, site, item[0], item[1])
-                    self.storage.desconecta(conexao)
+            status = self.storage.cria_tabela_storage()
+            if (status == 0):
+                if ("localStorage" in resultado.keys()):
+                    local_dicio = resultado["localStorage"]
+                    for item in local_dicio.items():
+                        self.storage.insere_storage(site, item[0], item[1])
+                if ("sessionStorage" in resultado.keys()):
+                    session_dicio = resultado["sessionStorage"]
+                    for item in session_dicio.items():
+                        self.storage.insere_storage(site, item[0], item[1])
 
     def quit(self):
         try:

@@ -52,12 +52,10 @@ class PegaMensagens:
     def configure(self, update):
         opt = ctx.options
         if ("site" in update):
-            self.site_atual = splitWWW(urlsplit(opt.site).netloc)
+            self.site_atual = opt.site
 
         self.cookie_db = BancoDeDados(opt.navegador, opt.nivel)
-        self.conexao = self.cookie_db.conecta()
-        if (self.conexao):
-            self.cookie_db.cria_tabela_cookie(self.conexao)
+        self.cookie_db.cria_tabela_cookie()
 
         ctx.log.info("Configurações alteradas!")
 
@@ -84,7 +82,7 @@ class PegaMensagens:
     def _checkCookie(self, vals, nome, valor, host):
         expires = vals.get("expires")
         max_age = vals.get("max-age")
-        dominio = vals.get("max-age")
+        dominio = vals.get("domain")
         idade = ""
         suspeita = False
         if (max_age):
@@ -102,14 +100,16 @@ class PegaMensagens:
                     continue
 
         if (dominio == None):
-            dominio = host    
-        terceiro = dominio in self.site_atual
+            dominio = host
+        elif (dominio[0] == '.'):
+            dominio = dominio[1:]
+        terceiro = dominio != self.site_atual
         
         # pega possiveis cookies de tracking
         if (suspeita) and (len(valor) > 8):
             if (re2.fullmatch(r"[a-zA-Z0-9_=-]+", valor)) or (re2.findall(r"[a-zA-Z_]+:[a-zA-Z0-9_=-]+", valor)) or (re2.findall(r"[a-zA-Z0-9_]+=[a-zA-Z0-9_=-]+", valor)):
                 self.id_cookies.append([nome,valor])
-                self.cookie_db.insere_cookie(self.conexao, dominio, nome, valor, terceiro, idade)
+                self.cookie_db.insere_cookie(dominio, nome, valor, terceiro, idade)
                 ctx.log.info(f"Possível cookie de tracking: {nome}={valor}")
 
     def request(self, flow):
@@ -197,6 +197,5 @@ class PegaMensagens:
         blocks = self.trackers - self.no_block
         if (self.trackers > 0):
             print(f"N° de domínios e scripts de rastreamento bloqueados: {blocks} ({blocks * 100/self.trackers}%)")
-        self.cookie_db.desconecta(self.conexao)
 
 addons = [PegaMensagens()]

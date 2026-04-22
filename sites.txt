@@ -1,19 +1,15 @@
 yahoo.co.jp
 yahoo.com
-globo.com
 news.yahoo.co.jp
 nytimes.com
 bbc.com
-bbc.co.uk
 cnn.com
 msn.com
 qq.com
 theguardian.com
-indiatimes.com
 douyin.com
 news.google.com
 foxnews.com
-uol.com.br
 infobae.com
 finance.yahoo.com
 news.naver.com
@@ -48,3 +44,7 @@ elmundo.es
 news18.com
 apnews.com
 nbcnews.com
+amazon.com
+temu.com
+ebay.com
+aliexpress.com

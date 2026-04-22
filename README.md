@@ -10,6 +10,8 @@ pip install -r requirements.txt
 Assume-se que um ambiente virtual python está sendo utilizado.
 
 ## Modo de uso
+Após baixar as dependências, deve-se rodar o mitmproxy com a opção ```--set confdir=configs``` para baixar o certificado, como descrito [nessa página](https://docs.mitmproxy.org/dev/concepts/certificates/).
+
 Testes devem ser iniciados por meio do comando:
 
 ```
