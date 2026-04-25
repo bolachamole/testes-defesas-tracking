@@ -4,7 +4,6 @@ from subprocess import Popen, run
 from time import sleep
 import argparse
 import os
-import signal
 import sys
 
 def parse_args():
@@ -49,6 +48,8 @@ def main():
                     browser.get(f"https://{site}")
                     sleep(60)
                     browser.coleta(site)
+        except KeyboardInterrupt:
+            print("Programa interrompido!")
         except Exception as erro:
             print("Erro ao tentar abrir os sites:", erro)
             deu_erro = True

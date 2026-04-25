@@ -7,8 +7,6 @@ from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.edge.options import Options as EdgeOptions
 from selenium.webdriver.safari.options import Options as SafariOptions
-from selenium.webdriver.common.proxy import Proxy
-from selenium.webdriver.common.proxy import ProxyType
 
 MEU_SCRIPT = """
 let resultado = Object.create(null);
@@ -37,20 +35,18 @@ class Browser:
             if (profile):
                 options.add_argument("-profile")
                 options.add_argument(profile)
-            else:
-                options.set_preference("network.proxy.http", "127.0.0.1")
-                options.set_preference("network.proxy.http_port", 8080)
-                options.set_preference("network.proxy.share_proxy_settings", True)
-                options.set_preference("network.proxy.ssl", "127.0.0.1")
-                options.set_preference("network.proxy.ssl_port", 8080)
-                options.set_preference("network.proxy.type", 1)
+            options.set_preference("network.proxy.http", "127.0.0.1")
+            options.set_preference("network.proxy.http_port", 8080)
+            options.set_preference("network.proxy.share_proxy_settings", True)
+            options.set_preference("network.proxy.ssl", "127.0.0.1")
+            options.set_preference("network.proxy.ssl_port", 8080)
+            options.set_preference("network.proxy.type", 1)
             self.driver = FirefoxDriver(options=options)
         elif (nav == "edge"):
             options = EdgeOptions()
             if (profile):
                 options.add_argument(f"--user-data-dir={profile}")
-            else:
-                options.add_argument('--proxy-server=http://localhost:8080')
+            options.add_argument('--proxy-server=http://localhost:8080')
             self.driver = EdgeDriver(options=options)
         elif (nav == "safari"):
             options = SafariOptions()
@@ -61,8 +57,7 @@ class Browser:
                 options.binary_location = path
             if (profile):
                 options.add_argument(f"--user-data-dir={profile}")
-            else:
-                options.add_argument('--proxy-server=http://localhost:8080')
+            options.add_argument('--proxy-server=http://localhost:8080')
             self.driver = ChromeDriver(options=options)
 
     def get(self, site):
