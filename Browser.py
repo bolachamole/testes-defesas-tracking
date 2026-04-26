@@ -46,7 +46,9 @@ class Browser:
             options = EdgeOptions()
             if (profile):
                 options.add_argument(f"--user-data-dir={profile}")
-            options.add_argument('--proxy-server=http://localhost:8080')
+                options.add_argument("--profile-directory=Profile 1")
+            options.add_argument("--start-maximized")
+            options.add_argument("--proxy-server=http://localhost:8080")
             self.driver = EdgeDriver(options=options)
         elif (nav == "safari"):
             options = SafariOptions()
@@ -57,7 +59,9 @@ class Browser:
                 options.binary_location = path
             if (profile):
                 options.add_argument(f"--user-data-dir={profile}")
-            options.add_argument('--proxy-server=http://localhost:8080')
+                options.add_argument("--profile-directory=Profile 1")
+            options.add_argument("--start-maximized")
+            options.add_argument("--proxy-server=http://localhost:8080")
             self.driver = ChromeDriver(options=options)
 
     def get(self, site):
