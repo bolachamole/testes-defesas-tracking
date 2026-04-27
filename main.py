@@ -41,34 +41,35 @@ def main():
         sleep(10) # espera um pouco pro mitmproxy iniciar
         browser = Browser(args.navegador, args.nivel, args.path_perfil, args.path_navegador)
         with open("sites.txt", 'r') as sites:
-            for site in sites:
-                try:
-                    with open("configs/config.yaml", "w") as c:
-                        c.writelines(f"site: {site}")
-                    browser.get(f"https://{site}")
-                    sleep(60)
-                    browser.coleta(site)
-                except ConnectionResetError as erro:
-                    print(f"{erro}. Pulando para o próximo site.")
-                    continue
-                except KeyboardInterrupt:
-                    print("Programa interrompido!")
-                except Exception as erro:
-                    deu_erro = f"Erro ao tentar abrir os sites: {erro}"
-                finally:
-                    browser.quit()
-                    if (sys.platform != "win32"):
-                        proc.terminate()
-                    else: # no windows o terminate() chama o TerminateProcess(), o que não ativa o done() do mitmproxy
-                        run(["taskkill", "/PID", str(proc.pid)], capture_output=True)
-                    proc.wait()
-                    bancodedados = BancoDeDados(args.navegador, args.nivel)
-                    n = bancodedados.conta_cookies_1p()
-                    print("N° de possíveis cookies de rastreamento (primeiros):", n)
-                    n = bancodedados.conta_cookies_3p()
-                    print("N° de possíveis cookies de rastreamento (terceiros):", n)
-                    n = bancodedados.conta_supercookies()
-                    print(f"N° de supercookies:", n)
+            try:
+                for site in sites:
+                    try:
+                        with open("configs/config.yaml", "w") as c:
+                            c.writelines(f"site: {site}")
+                        browser.get(f"https://{site}")
+                        sleep(60)
+                        browser.coleta(site)
+                    except ConnectionResetError as erro:
+                        print(f"{erro}. Pulando para o próximo site.")
+                        continue
+                    except KeyboardInterrupt:
+                        print("Programa interrompido!")
+                    except Exception as erro:
+                        deu_erro = f"Erro ao tentar abrir os sites: {erro}"
+            finally:
+                browser.quit()
+                if (sys.platform != "win32"):
+                    proc.terminate()
+                else: # no windows o terminate() chama o TerminateProcess(), o que não ativa o done() do mitmproxy
+                    run(["taskkill", "/PID", str(proc.pid)], capture_output=True)
+                proc.wait()
+                bancodedados = BancoDeDados(args.navegador, args.nivel)
+                n = bancodedados.conta_cookies_1p()
+                print("N° de possíveis cookies de rastreamento (primeiros):", n)
+                n = bancodedados.conta_cookies_3p()
+                print("N° de possíveis cookies de rastreamento (terceiros):", n)
+                n = bancodedados.conta_supercookies()
+                print(f"N° de supercookies:", n)
     except Exception as erro:
         deu_erro = f"Erro ao tentar iniciar os testes: {erro}"
 
