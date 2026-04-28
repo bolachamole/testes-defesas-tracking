@@ -1,6 +1,6 @@
 from bd import BancoDeDados
 from Browser import Browser
-from subprocess import Popen, run
+from subprocess import Popen
 from time import sleep
 import argparse
 import os
@@ -43,6 +43,7 @@ def main():
         with open("sites.txt", 'r') as sites:
             try:
                 for site in sites:
+                    site = site.strip()
                     try:
                         with open("configs/config.yaml", "w") as c:
                             c.writelines(f"site: {site}")
@@ -58,10 +59,7 @@ def main():
                         deu_erro = f"Erro ao tentar abrir os sites: {erro}"
             finally:
                 browser.quit()
-                if (sys.platform != "win32"):
-                    proc.terminate()
-                else: # no windows o terminate() chama o TerminateProcess(), o que não ativa o done() do mitmproxy
-                    run(["taskkill", "/PID", str(proc.pid)], capture_output=True)
+                proc.terminate()
                 proc.wait()
                 bancodedados = BancoDeDados(args.navegador, args.nivel)
                 n = bancodedados.conta_cookies_1p()
@@ -70,6 +68,14 @@ def main():
                 print("N° de possíveis cookies de rastreamento (terceiros):", n)
                 n = bancodedados.conta_supercookies()
                 print(f"N° de supercookies:", n)
+                n = bancodedados.conta_csync()
+                print("N° de instâncias de cookie syncing:", n)
+                total = bancodedados.conta_trackers()
+                print("N° de requisições a conteúdo de rastreamento:", total)
+                if (total > 0):
+                    blocks = bancodedados.conta_trackers_bloqueados()
+                    print(f"N° de conteúdos de rastreamento bloqueados: {blocks} ({blocks * 100/total}%)")
+
     except Exception as erro:
         deu_erro = f"Erro ao tentar iniciar os testes: {erro}"
 

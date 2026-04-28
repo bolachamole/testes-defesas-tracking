@@ -23,9 +23,6 @@ class PegaMensagens:
         self.site_ids = {}
         self.id_cookies = []
         self.lista_disc = []
-        self.sync_cookies = 0
-        self.trackers = 0
-        self.no_block = 0
         self.lista_easyp = getEasyPrivacy()
         self.lista_disc = getDisconnect()
 
@@ -56,6 +53,8 @@ class PegaMensagens:
 
         self.cookie_db = BancoDeDados(opt.navegador, opt.nivel)
         self.cookie_db.cria_tabela_cookie()
+        self.cookie_db.cria_tabela_csync()
+        self.cookie_db.cria_tabela_trackers()
 
         ctx.log.info("Configurações alteradas!")
 
@@ -76,7 +75,7 @@ class PegaMensagens:
                             mesmo_dono = whois(site1).get("org") == whois(site2[0]).get("org")
                         finally:
                             if (mesmo_dono == False):
-                                self.sync_cookies += 1
+                                self.cookie_db.insere_csync(site1, site2[0], self.id_cookies[i][0], self.id_cookies[i][1])
                                 ctx.log.info(f"Cookie syncing entre {site1} e {site2[0]}: {self.id_cookies[i][0]}={self.id_cookies[i][1]}")
 
     def _checkCookie(self, vals, nome, valor, host):
@@ -147,15 +146,18 @@ class PegaMensagens:
 
         # verifica conteudo de tracking
         if (regras.should_block(flow.request.url, options) == True):
-            achou = 1
+            status = self.cookie_db.insere_trackers(self.site_atual, flow.request.url, "easyprivacy")
+            # se foi inserido com exito, sera possivel atualizar depois
+            if (status == 0):
+                achou = 1
+                flow.marked = "easy"
         i = 0
         while (achou == 0) and (i < len(self.lista_disc)):
             if (terceiro) and (self.lista_disc[i] == url_host):
-                achou = 1
+                status = self.cookie_db.insere_trackers(self.site_atual, flow.request.url, "disconnect")
+                if (status == 0):
+                    flow.marked = "disc"
             i += 1
-        if (achou == 1):
-            self.trackers += 1
-            flow.marked = "tracker"
 
     def response(self, flow):
         url_parsed = urlsplit(flow.request.url)
@@ -187,15 +189,11 @@ class PegaMensagens:
                         self._checkCookie(vals, cookie[0][0], unquote(cookie[0][1]), url_parsed.netloc)
 
         # verifica se a requisicao é de um tracker
-        if (flow.marked == "tracker"):
-            self.no_block += 1
+        if (flow.marked == "easy"):
+            self.cookie_db.atualiza_trackers(self.site_atual, flow.request.url, "easyprivacy")
             ctx.log.info(f"Tracker {flow.request.url} encontrado.")
-
-    def done(self):
-        print("N° de instâncias de cookie syncing:", self.sync_cookies)
-        print("N° de requisições a domínios e scripts de rastreamento:", self.trackers)
-        blocks = self.trackers - self.no_block
-        if (self.trackers > 0):
-            print(f"N° de domínios e scripts de rastreamento bloqueados: {blocks} ({blocks * 100/self.trackers}%)")
+        elif (flow.marked == "disc"):
+            self.cookie_db.atualiza_trackers(self.site_atual, flow.request.url, "disconnect")
+            ctx.log.info(f"Tracker {flow.request.url} encontrado.")
 
 addons = [PegaMensagens()]

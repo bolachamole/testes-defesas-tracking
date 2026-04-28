@@ -40,7 +40,6 @@ corriere.it
 repubblica.it
 cnbc.com
 t-online.de
-rbc.ru
 usatoday.com
 edition.cnn.com
 reuters.com
@@ -72,7 +71,6 @@ rakuten.com
 ebay.co.uk
 shopee.com.br
 taobao.com
-alibaba.com
 mercari.com
 allegro.pl
 trendyol.com
@@ -92,6 +90,5 @@ mercadolibre.com.ar
 sahibinden.com
 amazon.com.mx
 mercadolibre.com.mx
-dns-shop.ru
 costco.com
 wayfair.com
