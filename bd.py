@@ -67,49 +67,6 @@ class BancoDeDados:
             print("Não foi possível procurar cookies de terceiros.", erro)
         return quant
 
-    def cria_tabela_storage(self):
-        try:
-            with sqlite3.connect(DB_ARQ) as conexao:
-                cursor = conexao.cursor()
-                cursor.execute(f"""CREATE TABLE IF NOT EXISTS {self.nome_db}_storage(
-                            id INTEGER PRIMARY KEY AUTOINCREMENT,
-                            domain TEXT,
-                            name TEXT,
-                            value TEXT
-                            );""")
-                conexao.commit()
-                cursor.close()
-            conexao.close()
-            return 0
-        except Exception as erro:
-            print("Não foi possível criar tabela {self.nome_db}_storage.", erro)
-        return 1
-
-    def insere_storage(self, domain, name, value):
-        try:
-            with sqlite3.connect(DB_ARQ) as conexao:
-                cursor = conexao.cursor()
-                tupla = (domain, name, value)
-                cursor.execute(f"INSERT INTO {self.nome_db}_storage (domain, name, value) VALUES (?, ?, ?);", tupla)
-                conexao.commit()
-                cursor.close()
-            conexao.close()
-        except Exception as erro:
-            print("Não foi possível inserir na tabela {self.nome_db}_storage.", erro)
-
-    def conta_supercookies(self):
-        quant = -1
-        try:
-            with sqlite3.connect(DB_ARQ) as conexao:
-                cursor = conexao.cursor()
-                consulta = cursor.execute(f"SELECT * FROM {self.nome_db}_cookies AS c INNER JOIN {self.nome_db}_storage AS s ON c.domain=s.domain AND c.name=s.name AND c.value=s.value;")
-                quant = len(consulta.fetchall())
-                cursor.close()
-            conexao.close()
-        except Exception as erro:
-            print("Não foi possível procurar supercookies.", erro)
-        return quant
-
     def cria_tabela_csync(self):
         try:
             with sqlite3.connect(DB_ARQ) as conexao:

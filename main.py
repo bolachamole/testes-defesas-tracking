@@ -49,7 +49,6 @@ def main():
                             c.writelines(f"site: {site}")
                         browser.get(f"https://{site}")
                         sleep(60)
-                        browser.coleta(site)
                     except ConnectionResetError as erro:
                         print(f"{erro}. Pulando para o próximo site.")
                         continue
@@ -66,8 +65,6 @@ def main():
                 print("N° de possíveis cookies de rastreamento (primeiros):", n)
                 n = bancodedados.conta_cookies_3p()
                 print("N° de possíveis cookies de rastreamento (terceiros):", n)
-                n = bancodedados.conta_supercookies()
-                print(f"N° de supercookies:", n)
                 n = bancodedados.conta_csync()
                 print("N° de instâncias de cookie syncing:", n)
                 total = bancodedados.conta_trackers()
