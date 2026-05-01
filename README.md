@@ -24,4 +24,4 @@ A opção ```path-navegador``` é obrigatória ao testar os navegadores Opera e 
 
 Os seguintes valores são válidos para a opção ```navegador```: ```chrome```, ```firefox```, ```edge```, ```opera```, ```brave``` e ```safari```.
 
-Os seguintes valores são válidos para a opção ```nivel```: ```normal```e ```hard```. Ela serve apenas para diferenciar o nome das tabelas no banco de dados.
+Os seguintes valores são válidos para a opção ```nivel```: ```normal```e ```rigoroso```. Ela serve apenas para diferenciar o nome das tabelas no banco de dados.

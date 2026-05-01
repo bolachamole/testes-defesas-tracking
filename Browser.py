@@ -26,8 +26,9 @@ class Browser:
         elif (nav == "edge"):
             options = EdgeOptions()
             if (profile):
+                prof_dir = profile.split("/")[-1]
                 options.add_argument(f"--user-data-dir={profile}")
-                options.add_argument("--profile-directory=Profile 1")
+                options.add_argument(f"--profile-directory={prof_dir}")
             options.add_argument("--start-maximized")
             options.add_argument("--proxy-server=http://localhost:8080")
             self.driver = EdgeDriver(options=options)
@@ -39,8 +40,9 @@ class Browser:
             if (path):
                 options.binary_location = path
             if (profile):
+                prof_dir = profile.split("/")[-1]
                 options.add_argument(f"--user-data-dir={profile}")
-                options.add_argument("--profile-directory=Profile 1")
+                options.add_argument(f"--profile-directory={prof_dir}")
             options.add_argument("--start-maximized")
             options.add_argument("--proxy-server=http://localhost:8080")
             self.driver = ChromeDriver(options=options)
