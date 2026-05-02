@@ -3,3 +3,5 @@ stateful.db
 __pycache__
 configs/mitm*
 User Data
+*.normal
+*.rigoroso

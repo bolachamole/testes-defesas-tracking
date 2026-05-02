@@ -1,4 +1,5 @@
 from bd import BancoDeDados
+from pathlib import Path
 from selenium.webdriver.chrome.webdriver import WebDriver as ChromeDriver
 from selenium.webdriver.firefox.webdriver import WebDriver as FirefoxDriver
 from selenium.webdriver.edge.webdriver import WebDriver as EdgeDriver
@@ -26,9 +27,9 @@ class Browser:
         elif (nav == "edge"):
             options = EdgeOptions()
             if (profile):
-                prof_dir = profile.split("/")[-1]
-                options.add_argument(f"--user-data-dir={profile}")
-                options.add_argument(f"--profile-directory={prof_dir}")
+                prof_dir = Path(profile)
+                options.add_argument(f"--user-data-dir={prof_dir.parent}")
+                options.add_argument(f"--profile-directory={prof_dir.name}")
             options.add_argument("--start-maximized")
             options.add_argument("--proxy-server=http://localhost:8080")
             self.driver = EdgeDriver(options=options)
@@ -40,11 +41,13 @@ class Browser:
             if (path):
                 options.binary_location = path
             if (profile):
-                prof_dir = profile.split("/")[-1]
-                options.add_argument(f"--user-data-dir={profile}")
-                options.add_argument(f"--profile-directory={prof_dir}")
+                prof_dir = Path(profile)
+                options.add_argument(f"--user-data-dir={prof_dir.parent}")
+                options.add_argument(f"--profile-directory={prof_dir.name}")
             options.add_argument("--start-maximized")
             options.add_argument("--proxy-server=http://localhost:8080")
+            if (nav == "opera"):
+                options.add_experimental_option("w3c", True)
             self.driver = ChromeDriver(options=options)
 
     def get(self, site):
