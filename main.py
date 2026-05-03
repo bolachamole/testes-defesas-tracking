@@ -44,18 +44,17 @@ def main():
             try:
                 for site in sites:
                     site = site.strip()
-                    try:
-                        with open("configs/config.yaml", "w") as c:
-                            c.writelines(f"site: {site}")
-                        browser.get(f"https://{site}")
+                    with open("configs/config.yaml", "w") as c:
+                        c.writelines(f"site: {site}")
+                    status = browser.get(f"https://{site}")
+                    if (status == 0):
                         sleep(60)
-                    except ConnectionResetError as erro:
-                        print(f"{erro}. Pulando para o próximo site.")
+                    else:
                         continue
-                    except KeyboardInterrupt:
-                        print("Programa interrompido!")
-                    except Exception as erro:
-                        deu_erro = f"Erro ao tentar abrir os sites: {erro}"
+            except KeyboardInterrupt:
+                print("Programa interrompido!")
+            except Exception as erro:
+                deu_erro = f"Erro ao tentar abrir os sites: {erro}"
             finally:
                 browser.quit()
                 proc.terminate()

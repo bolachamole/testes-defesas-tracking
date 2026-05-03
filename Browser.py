@@ -49,12 +49,15 @@ class Browser:
             if (nav == "opera"):
                 options.add_experimental_option("w3c", True)
             self.driver = ChromeDriver(options=options)
+        self.driver.set_page_load_timeout(60)
 
     def get(self, site):
         try:
             self.driver.get(site)
-        except:
-            self.driver.get(site)
+            return 0
+        except Exception as erro:
+            print(erro)
+        return 1
 
     def quit(self):
         try:
