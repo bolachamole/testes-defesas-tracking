@@ -1,5 +1,6 @@
 from bd import BancoDeDados
 from pathlib import Path
+#from selenium import webdriver
 from selenium.webdriver.chrome.webdriver import WebDriver as ChromeDriver
 from selenium.webdriver.firefox.webdriver import WebDriver as FirefoxDriver
 from selenium.webdriver.edge.webdriver import WebDriver as EdgeDriver
@@ -8,10 +9,10 @@ from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.edge.options import Options as EdgeOptions
 from selenium.webdriver.safari.options import Options as SafariOptions
+from selenium.webdriver.chrome import service
 
 class Browser:
-    def __init__(self, nav, nivel, profile=None, path=None):
-        self.storage = BancoDeDados(nav, nivel)
+    def __init__(self, nav, profile=None, path=None, path_driver=None):
         if (nav == "firefox"):
             options = FirefoxOptions()
             if (profile):
@@ -36,6 +37,20 @@ class Browser:
         elif (nav == "safari"):
             options = SafariOptions()
             self.driver = SafariDriver(options=options)
+        elif (nav == "opera") and (path) and (path_driver):
+            webdriver_service = service.Service(path_driver)
+            webdriver_service.start()
+            options = ChromeOptions()
+            options.binary_location = path
+            options.add_experimental_option("w3c", True)
+            if (profile):
+                prof_dir = Path(profile)
+                options.add_argument(f"--user-data-dir={prof_dir.parent}")
+                options.add_argument(f"--profile-directory={prof_dir.name}")
+            options.add_argument("--start-maximized")
+            options.add_argument("--proxy-server=http://localhost:8080")
+            self.driver = ChromeDriver(options=options, service=webdriver_service)
+            #self.driver = webdriver.Remote(command_executor=webdriver_service.service_url, options=options)
         else:
             options = ChromeOptions()
             if (path):
@@ -46,8 +61,6 @@ class Browser:
                 options.add_argument(f"--profile-directory={prof_dir.name}")
             options.add_argument("--start-maximized")
             options.add_argument("--proxy-server=http://localhost:8080")
-            if (nav == "opera"):
-                options.add_experimental_option("w3c", True)
             self.driver = ChromeDriver(options=options)
         self.driver.set_page_load_timeout(60)
 

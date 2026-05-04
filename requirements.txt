@@ -3,4 +3,4 @@ google-re2==1.1.20251105
 mitmproxy
 python-whois==0.9.6
 requests==2.33.1
-selenium==4.41.0
+selenium==4.42.0

@@ -12,6 +12,7 @@ def parse_args():
     parser.add_argument("--nivel", default="normal")
     parser.add_argument("--path-perfil", default=None)
     parser.add_argument("--path-navegador", default=None)
+    parser.add_argument("--path-webdriver", default=None)
     return parser.parse_args()
 
 def main():
@@ -34,12 +35,15 @@ def main():
     if (args.navegador in ["opera", "brave"]) and (args.path_navegador == None):
         print(f"É obrigatório especificar o caminho para o {args.navegador}.")
         sys.exit(1)
+    if (args.navegador == "opera") and (args.path_webdriver == None):
+        print(f"É obrigatório utilizar o webdriver do Opera (https://github.com/operasoftware/operachromiumdriver).")
+        sys.exit(1)
 
     deu_erro = ""
     try:
         proc = Popen([f"{path_mitm}/mitmdump", "-s", "PegaMensagens.py", "--set", "confdir=configs/", "--set", f"navegador={args.navegador}", "--set", f"nivel={args.nivel}"])
         sleep(10) # espera um pouco pro mitmproxy iniciar
-        browser = Browser(args.navegador, args.nivel, args.path_perfil, args.path_navegador)
+        browser = Browser(args.navegador, args.path_perfil, args.path_navegador, args.path_webdriver)
         with open("sites.txt", 'r') as sites:
             try:
                 for site in sites:
